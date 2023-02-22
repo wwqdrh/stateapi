@@ -1,0 +1,104 @@
+syntax = "proto3";
+
+package protos;
+
+enum FieldValueType {
+    Primary = 0;
+    Int = 1;
+    String = 2;
+}
+
+enum QueryOpType {
+    Eq = 0;
+}
+
+message FieldSpec {
+    string name = 1;
+    string mode = 2;
+    string default = 3;
+    bool unique = 4;
+    bool index = 5;
+    bool null = 6;
+}
+
+message FieldValue {
+    string name = 1;
+    FieldValueType mode = 2;
+    string value = 3;
+}
+
+message RecordValue {
+    repeated FieldValue data = 1;
+}
+
+message TableBuildRequest {
+    string name = 1;
+    repeated FieldSpec fields = 2;
+    repeated RecordValue default = 3;
+    bool create = 4;
+    bool clean = 5;
+}
+
+message TableBuildResponse {
+    int32 code = 1;
+}
+
+message TableInsertRequest {
+    string returns = 1;
+    RecordValue fields = 2;
+}
+
+message TableInsertResponse {
+    int32 code = 1;
+}
+
+message QueryJoin {
+    string this = 1;
+    string other = 2;
+    string mode = 3;
+}
+
+message QueryExpr {
+    string left = 1;
+    QueryOpType op = 2;
+    FieldValueType mode = 3;
+    string right = 4;
+}
+
+message QueryRequest {
+    repeated QueryExpr expr = 1;
+    repeated QueryJoin joins = 2;
+    string selects = 3;
+    string group = 4;
+}
+message QueryResponse {
+    int32 code = 1;
+}
+
+message UpdateRequest {
+    string returns = 1;
+    bool insert = 2;
+    repeated QueryExpr expr = 3;
+    RecordValue fields = 4;
+}
+
+message UpdateResponse {
+    int32 code = 1;
+}
+
+message DeleteRequest {
+    repeated QueryExpr expr = 1;
+    string returns = 2;
+}
+
+message DeleteResponse {
+    int32 code = 1;
+}
+
+service OrmApi {
+    rpc TableBuild(TableBuildRequest) returns (TableBuildResponse) {}
+    rpc TableQuery(QueryRequest) returns (QueryResponse) {}
+    rpc TableInsert(TableInsertRequest) returns (TableInsertResponse) {}
+    rpc TableUpdate(UpdateRequest) returns (UpdateResponse) {}
+    rpc TableDelete(DeleteRequest) returns (DeleteResponse) {}
+}

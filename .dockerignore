@@ -1,0 +1,8 @@
+.vscode
+logs
+dist
+protos
+*.yaml
+Dockerfile
+bin
+.venv

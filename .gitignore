@@ -1,0 +1,10 @@
+tmp
+*.db
+!.vscode
+.venv
+logs
+__pycache__
+
+config.*.yaml
+
+dist
